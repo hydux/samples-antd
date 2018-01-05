@@ -39,6 +39,7 @@ module.exports = createConfig([
         comments: false,
       },
     },
+    sourceMap: true,
   }),
   addPlugins([
     new webpack.DllPlugin({

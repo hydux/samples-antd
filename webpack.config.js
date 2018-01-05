@@ -69,7 +69,6 @@ module.exports = createConfig([
         changeOrigin: true,
       },
     }),
-    sourceMaps(),
   ]),
   env('production', [
     addPlugins([
@@ -84,6 +83,7 @@ module.exports = createConfig([
           comments: false,
         },
       },
+      sourceMap: true,
     }),
     sourceMaps('source-map'),
   ]),
