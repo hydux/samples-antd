@@ -21,6 +21,10 @@ export const Root = ({ state, actions }: { state: State.State, actions: State.Ac
         onSearch={_ => actions.crud.loadList()}
         isLoading={state.crud.isLoadingEntity}
         onCreate={_ => actions.crud.toggleEditDialog([true, ''])}
+        onReset={_ => {
+          actions.crud.updateQuery(State.emptyQuery())
+          actions.crud.loadList()
+        }}
       />
       <CrudView.DataTable
         columns={[{

@@ -24,7 +24,7 @@ module.exports = createConfig([
   setOutput({
     filename: '[name].js',
     path: DIST,
-    publicPath: DIST,
+    publicPath: DIST.replace(__dirname, ''),
   }),
   css(),
   sass(),

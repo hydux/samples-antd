@@ -1,6 +1,10 @@
 import client, { UserIn, UserOut, UserQuery } from './APIClient'
 import { State } from '../Crud'
 
+export const emptyIn = client.emptyIn
+export const emptyOut = client.emptyOut
+export const emptyQuery = client.emptyQuery
+
 const state = {
   crud: State.init(client.emptyIn(), client.emptyOut(), client.emptyQuery()),
 }
