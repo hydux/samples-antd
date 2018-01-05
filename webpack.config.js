@@ -12,7 +12,7 @@ const path = require('path')
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 
-const DIST = `${__dirname}/static/dist`
+const DIST = `${__dirname}/docs/dist`
 
 module.exports = createConfig([
   entryPoint({
@@ -24,7 +24,7 @@ module.exports = createConfig([
   setOutput({
     filename: '[name].js',
     path: DIST,
-    publicPath: '/static/dist',
+    publicPath: DIST,
   }),
   css(),
   sass(),
@@ -74,8 +74,17 @@ module.exports = createConfig([
   env('production', [
     addPlugins([
       new Clean(['dist'], {exclude: ['vendor.dll.js', 'vendor-manifest.json']}),
-      uglify(),
     ]),
-    sourceMaps(),
+    uglify({
+      parallel: true,
+      cache: true,
+      uglifyOptions: {
+        minimize: true,
+        output: {
+          comments: false,
+        },
+      },
+    }),
+    sourceMaps('source-map'),
   ]),
 ])

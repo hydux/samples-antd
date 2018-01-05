@@ -8,12 +8,12 @@ export default abstract class CRUDClient<EIn extends { id: Id }, EOut, Q> implem
   }
   abstract emptyIn(): EIn
   // client should be binded
-  fetchList = (paging: Paging<EOut, Q>): Promise<Paging<EOut, Q>> => {
+  fetchList = ([paging, query]: [Paging<EOut>, Q]): Promise<Paging<EOut>> => {
     return axios.get(`/api/${this.name}s`, {
       params: {
         start: paging.start,
         limit: paging.limit,
-        ...(paging.query as Object),
+        ...(query as Object),
       }
     }) as any
   }
@@ -32,7 +32,7 @@ export default abstract class CRUDClient<EIn extends { id: Id }, EOut, Q> implem
   outToIn = (e: EOut): EIn => {
     return e as any as EIn
   }
-  validate = (e: EIn): ValidateError<EIn> => {
-    return {}
+  validate = (e: EIn): [EIn, ValidateError<EIn>] => {
+    return [e, {}]
   }
 }

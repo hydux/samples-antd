@@ -32,21 +32,20 @@ export function SearchForm({
       style={{ marginBottom: 10 }}
     >
       <Row gutter={24}>{
-        inputs.map(([label, element], i) => (
-          <Col span={24 / colCount} key={i}>
-            <FormItem label={label}>
-              {element}
-            </FormItem>
-          </Col>
-        ))
-      }</Row>
-      <Row>
-        <Col span={24} style={{ textAlign: 'right' }}>
-          <Button type="primary" loading={isLoading} onClick={onCreate}>创建</Button>
-          <Button style={{ marginLeft: 8 }} type="primary" htmlType="submit" loading={isLoading}> 搜索</Button>
+          inputs.map(([label, element], i) => (
+            <Col span={24 / colCount} key={i}>
+              <FormItem label={label}>
+                {element}
+              </FormItem>
+            </Col>
+          ))
+        }
+        <Col span={24 / colCount} style={{ textAlign: 'right', paddingTop: 40 }}>
+          <Button type="primary" htmlType="submit" loading={isLoading}> 搜索</Button>
           <Button style={{ marginLeft: 8 }} onClick={onReset} loading={isLoading}>
             清空
           </Button>
+          <Button style={{ marginLeft: 8 }} type="primary" loading={isLoading} onClick={onCreate}>创建</Button>
         </Col>
       </Row>
     </Form>
@@ -56,15 +55,17 @@ export function SearchForm({
 export function DataTable<T, Q>({
   columns,
   paging,
+  isLoading,
   onChange,
 }: {
   columns: ColumnProps<T>[],
-  paging: Paging<T, Q>,
-  onChange: (paging: Paging<T, Q>) => void,
+  paging: Paging<T>,
+  isLoading: boolean,
+  onChange: (paging: Paging<T>) => void,
 }) {
   return (
     <Table
-      loading={paging.isLoading}
+      loading={isLoading}
       columns={columns}
       dataSource={paging.list}
       bordered

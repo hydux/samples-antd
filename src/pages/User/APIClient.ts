@@ -1,5 +1,5 @@
 import { CRUDClient, Types } from '../Crud'
-
+import yup from 'yup'
 export interface UserIn {
   id: string
   name: string
@@ -18,6 +18,13 @@ export interface UserQuery {
 }
 
 export class UserClient extends CRUDClient<UserIn, UserOut, UserQuery> {
+
+  schema = yup.object({
+    id: yup.string().matches(/^\d*$/),
+    name: yup.string().max(10, '最长10个字符').min(4, '最小4个字符'),
+    birthday: yup.string().matches(/\d{4}-[01][0-9]-[0-3][0-9]/, '非法生日格式'),
+  })
+
   constructor() {
     super('user')
   }
@@ -28,10 +35,15 @@ export class UserClient extends CRUDClient<UserIn, UserOut, UserQuery> {
 
   validate = (e: UserIn) => {
     let errors: Types.ValidateError<UserIn> = {}
-    if (e.name.length > 6) {
-      errors.name = '名字长度不能超过6'
+    try {
+      e = this.schema.validateSync(e, {
+      }) as any
+    } catch (err) {
+      errors[err.path] = err.message
+      console.log('err', err)
     }
-    return errors
+    console.log('validated', e)
+    return [e, errors] as [UserIn, typeof errors]
   }
 
   emptyIn(): UserIn {

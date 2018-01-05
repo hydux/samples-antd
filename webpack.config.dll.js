@@ -9,7 +9,7 @@ const path = require('path')
 const devServer = require('@webpack-blocks/dev-server')
 // const cssModules = require('./tools/webpack-blocks/css-loader')
 
-const DIST = `${__dirname}/static/dist`
+const DIST = `${__dirname}/docs/dist`
 
 module.exports = createConfig([
   entryPoint({
@@ -18,7 +18,7 @@ module.exports = createConfig([
   setOutput({
     filename: '[name].dll.js',
     path: DIST,
-    publicPath: '/static/dist',
+    publicPath: DIST,
     library: '[name]', // needed for dll plugin
   }),
   // cssModules(),
@@ -48,5 +48,7 @@ module.exports = createConfig([
     }),
     // cannot live with `-p` in command line
   ]),
-  sourceMaps(),
+  sourceMaps('source-map'),
 ])
+
+console.log('module.exports', module.exports)

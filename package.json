@@ -20,6 +20,7 @@
     "@types/node": "^8.0.55",
     "@types/react": "^16.0.31",
     "@types/react-router": "^4.0.19",
+    "@types/yup": "^0.23.0",
     "clean-webpack-plugin": "^0.1.17",
     "cross-env": "^5.1.1",
     "remotedev": "^0.2.7",
@@ -41,6 +42,7 @@
     "hydux-react": "^0.2.1",
     "js-cookies": "^1.0.4",
     "react-router-dom": "^4.2.2",
-    "typestyle": "^1.5.1"
+    "typestyle": "^1.5.1",
+    "yup": "^0.23.0"
   }
 }

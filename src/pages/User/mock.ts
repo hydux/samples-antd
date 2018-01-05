@@ -18,11 +18,18 @@ export default function mockUserApi(axios: any) {
   const mock = new MockAdapter(axios)
   mock.onGet('/api/users').reply(config => {
     const params = config.params
+    let users = mockUsers
+    if (params.id) {
+      users = users.filter(u => u.id.indexOf(params.id) >= 0)
+    }
+    if (params.name) {
+      users = users.filter(u => u.name.indexOf(params.name) >= 0)
+    }
     return [200, {
       start: params.start,
       limit: params.limit,
-      list: mockUsers.slice(params.start || 0, (params.start || 0) + (params.limit || 10)),
-      total: mockUsers.length,
+      list: users.slice(params.start || 0, (params.start || 0) + (params.limit || 10)),
+      total: users.length,
     }]
   })
 

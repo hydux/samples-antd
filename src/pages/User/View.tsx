@@ -5,11 +5,12 @@ import { Input, Popconfirm, Button } from 'antd'
 import { setIn, updateIn } from 'hydux-mutator'
 
 export const Root = ({ state, actions }: { state: State.State, actions: State.Actions }) => {
-  const changeSearch = CrudView.updateField(state.crud.paging.query, actions.crud.updateQuery)
+  const { query } = state.crud
+  const changeSearch = CrudView.updateField(query, actions.crud.updateQuery)
 
   const searchInputs: [string, JSX.Element][] = [
-    ['ID', <Input key={1} type="text" onChange={changeSearch(_ => _.id)} />],
-    ['名字', <Input key={1} type="text" onChange={changeSearch(_ => _.name)} />],
+    ['ID', <Input key={1} type="text" value={query.id} onChange={changeSearch(_ => _.id)} />],
+    ['名字', <Input key={1} type="text" value={query.name} onChange={changeSearch(_ => _.name)} />],
   ]
 
   const changeForm = CrudView.updateField(state.crud.entity, actions.crud.updateEntity)
@@ -54,6 +55,7 @@ export const Root = ({ state, actions }: { state: State.State, actions: State.Ac
           },
         }]}
         paging={state.crud.paging}
+        isLoading={state.crud.isLoadingList}
         onChange={actions.crud.loadList}
       />
       <CrudView.FormModal

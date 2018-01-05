@@ -9,13 +9,13 @@ export function init<EIn, EOut, Q>(eIn: EIn, eOut: EOut, q: Q): State<EIn, EOut,
       start: 0,
       limit: 20,
       total: 0,
-      query: {} as Q,
-      isLoading: false,
     },
     isLoadingEntity: false,
     showEditDialog: false,
     entity: eIn,
     entityErrors: {},
+    query: q,
+    isLoadingList: false,
   }
 }
 
@@ -26,8 +26,8 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     this._client = client
   }
 
-  loadList = (paging?: Paging<EOut, Q>) => (state: S, actions: this) => {
-    state = setIn(state, _ => _.paging.isLoading, true)
+  loadList = (paging?: Paging<EOut>) => (state: S, actions: this) => {
+    state = setIn(state, _ => _.isLoadingList, true)
     state = paging && Array.isArray(paging.list)
       ? setIn(state, _ => _.paging, paging)
       : state
@@ -35,7 +35,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
       state,
       Cmd.ofPromise(
         this._client.fetchList,
-        paging || state.paging,
+        [paging || state.paging, state.query],
         actions.updateLocalList,
       )
     ] as [S, CmdType<this>]
@@ -101,7 +101,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
   ]
 
   updateQuery = (q: Q) => (state: S) =>
-    setIn(state, _ => _.paging.query, q)
+    setIn(state, _ => _.query, q)
   // actions should be binded
   toggleEditDialog = ([show, id]: [boolean, Id | void]) => (state: S) => {
     let cmd = Cmd.none
@@ -118,9 +118,9 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     ] as [S, CmdType<this>]
   }
 
-  updateLocalList = (paging: Paging<EOut, Q>) => (state: S) => (
+  updateLocalList = (paging: Paging<EOut>) => (state: S) => (
     state = setIn(state, _ => _.paging, paging),
-    setIn(state, _ => _.paging.isLoading, false)
+    setIn(state, _ => _.isLoadingList, false)
   )
 
   editSuccess = (e: EOut) => (state: S) => [
@@ -138,8 +138,8 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
   )
 
   updateEntity = (e: EIn) => (state: S) => {
-    let nextState = setIn(state, _ => _.entity, e)
     const errors = this._client.validate(e)
-    return setIn(nextState, _ => _.entityErrors, errors)
+    let nextState = setIn(state, _ => _.entity, errors[0])
+    return setIn(nextState, _ => _.entityErrors, errors[1])
   }
 }
