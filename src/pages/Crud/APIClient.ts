@@ -7,7 +7,7 @@ export default abstract class CRUDClient<EIn extends { id: Id }, EOut, Q> implem
     this.name = name
   }
   abstract emptyIn(): EIn
-
+  // client should be binded
   fetchList = (paging: Paging<EOut, Q>): Promise<Paging<EOut, Q>> => {
     return axios.get(`/api/${this.name}s`, {
       params: {

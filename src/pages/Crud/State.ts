@@ -102,7 +102,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
 
   updateQuery = (q: Q) => (state: S) =>
     setIn(state, _ => _.paging.query, q)
-
+  // actions should be binded
   toggleEditDialog = ([show, id]: [boolean, Id | void]) => (state: S) => {
     let cmd = Cmd.none
     state = setIn(state, _ => _.showEditDialog, show)
