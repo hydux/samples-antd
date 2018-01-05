@@ -13,7 +13,7 @@ const DIST = `${__dirname}/static/dist`
 
 module.exports = createConfig([
   entryPoint({
-    vendor: ['./src/vendor.ts'],
+    vendor: ['react', 'antd', './src/vendor.ts'],
   }),
   setOutput({
     filename: '[name].dll.js',

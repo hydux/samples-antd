@@ -1,17 +1,7 @@
 import { NestedRoutes, parseNestedRoutes } from 'hydux/lib/enhancers/router'
 import * as State from '../main/state'
 import * as CurdPage from 'pages/Crud'
-import { noop } from 'hydux'
-
-export type User = {
-  name: string,
-  id: string,
-  age: number,
-}
-
-export type UserQuery = {
-  id?: string,
-}
+import { noop, Cmd } from 'hydux'
 
 export type Page =
 | 'dashboard'
@@ -19,12 +9,14 @@ export type Page =
 
 export interface MyNestedRoutes<State, Actions> extends NestedRoutes<State, Actions> {
   icon?: string
+  parents?: MyNestedRoutes<State, Actions>[],
   children: MyNestedRoutes<State, Actions>[]
 }
 
 export const rawRoutes: MyNestedRoutes<State.State, State.Actions> = {
   path: '/',
   action: noop,
+  parents: [],
   children: [{
     path: '/general',
     label: 'General',
@@ -37,7 +29,9 @@ export const rawRoutes: MyNestedRoutes<State.State, State.Actions> = {
     }, {
       path: '/users',
       label: 'Users',
-      action: loc => state => ({ ...state, page: 'users' }),
+      action: loc => state => [({ ...state, page: 'users' }), Cmd.ofSub<State.Actions>(actions => {
+        actions.user.crud.loadList()
+      })],
       children: [],
     }],
   }]
@@ -47,4 +41,8 @@ export function join(...args: string[]) {
   return args.join('/').replace(/\/+/g, '/')
 }
 
-export default parseNestedRoutes(rawRoutes)
+const routes = parseNestedRoutes(rawRoutes)
+
+console.log(routes)
+
+export default routes

@@ -19,7 +19,7 @@ app = withRouter<State._State, State._Actions>({
   routes: Routes.default.routes,
 } as any)(app)
 
-if (process.env.NODE_ENV === 'development') {
+if (__DEV__) {
   const devTools = require('hydux/lib/enhancers/devtools').default
   const logger = require('hydux/lib/enhancers/logger').default
   const hmr = require('hydux/lib/enhancers/hmr').default
@@ -28,8 +28,15 @@ if (process.env.NODE_ENV === 'development') {
   app = hmr()(app)
 }
 
-export default app({
+console.log('app')
+
+const ctx = app({
   init: State.init,
   actions: State.actions,
   view: View.root,
 })
+
+console.log('__DEV__', __DEV__)
+if (__DEV__) {
+  (window as any).ctx = ctx
+}

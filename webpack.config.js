@@ -17,6 +17,7 @@ const DIST = `${__dirname}/static/dist`
 module.exports = createConfig([
   entryPoint({
     bundle: [
+      './src/types/index.ts',
       './src/index.js',
     ].filter(Boolean),
   }),

@@ -1,9 +1,10 @@
+import './style.scss'
 import * as React from 'react'
 import * as State from './State'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd'
 import * as Routes from '../consts/routes'
 import { Debug } from 'utils'
-import './style.scss'
+import * as User from 'pages/User'
 
 const debug = Debug(__filename)
 
@@ -58,6 +59,17 @@ function renderBreadcrumb(state: State.State, style: React.CSSProperties = {}) {
   )
 }
 
+function renderRoutes(state: State.State, actions: State.Actions) {
+  switch (state.page) {
+    case 'dashboard':
+      return 'Dashboard'
+    case 'users':
+      return <User.View.Root state={state.user} actions={actions.user} />
+    default:
+      return <div style={{ color: 'red' }}> Unknown route! </div>
+  }
+}
+
 export const root = (state: State.State) => (actions: State.Actions) => (
   <Layout>
     <Layout>
@@ -91,7 +103,7 @@ export const root = (state: State.State) => (actions: State.Actions) => (
         </Header>
         {renderBreadcrumb(state, { paddingLeft: 24 })}
         <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-          {state.page}
+          {renderRoutes(state, actions)}
         </Content>
       </Layout>
     </Layout>

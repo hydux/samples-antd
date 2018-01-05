@@ -14,6 +14,8 @@
     "lint": "tslint ./src/** --type-check -p ./tsconfig.json"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/axios-mock-adapter": "^1.9.0",
     "@types/history": "^4.6.2",
     "@types/node": "^8.0.55",
     "@types/react": "^16.0.31",
@@ -32,9 +34,12 @@
   "dependencies": {
     "antd": "^3.0.2",
     "axios": "^0.17.1",
+    "axios-mock-adapter": "^1.10.0",
     "debug": "^3.1.0",
-    "hydux": "^0.2.2",
+    "hydux": "^0.2.4",
+    "hydux-mutator": "^0.1.7",
     "hydux-react": "^0.2.1",
+    "js-cookies": "^1.0.4",
     "react-router-dom": "^4.2.2",
     "typestyle": "^1.5.1"
   }

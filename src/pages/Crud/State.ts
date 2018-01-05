@@ -1,32 +1,8 @@
-import { Cmd, CmdType, Sub, ActionResult, ActionsType } from 'hydux'
-
-export type Id = string
-
-export interface Paging<EOut, Q> {
-  list: EOut[]
-  start: number,
-  limit: number,
-  total: number,
-  query: Q
-}
-
-export interface Client<EIn, EOut, Q> {
-  fetchList<Q>(q: Q): Promise<Paging<EOut, Q>>
-  fetchOne(id: Id): Promise<EOut>
-  updateOne(e: EIn): Promise<EOut>
-  createOne(e: EIn): Promise<EOut>
-  removeOne(id: Id)
-  outToIn(e: EOut): EIn
-}
-
-export interface State<EIn, EOut, Q> extends Object {
-  readonly paging: Paging<EOut, Q>,
-  readonly isLoading: boolean,
-  readonly entity: Readonly<EIn>,
-  readonly showEditDialog: boolean,
-}
-
-export function init<EIn, EOut, Q>(e: EIn, q: Q, _?: EOut): State<EIn, EOut, Q> {
+import { Cmd, CmdType, Sub, ActionsType, ActionResult } from 'hydux'
+import { setIn, updateIn, unsetIn } from 'hydux-mutator'
+import { State, Id, Client, Paging } from './Types'
+export { State }
+export function init<EIn, EOut, Q>(eIn: EIn, eOut: EOut, q: Q): State<EIn, EOut, Q> {
   return {
     paging: {
       list: [],
@@ -34,93 +10,136 @@ export function init<EIn, EOut, Q>(e: EIn, q: Q, _?: EOut): State<EIn, EOut, Q> 
       limit: 20,
       total: 0,
       query: {} as Q,
+      isLoading: false,
     },
-    isLoading: false,
+    isLoadingEntity: false,
     showEditDialog: false,
-    entity: e,
+    entity: eIn,
+    entityErrors: {},
   }
 }
 
-let a = init(1, 2, '')
-
 export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EOut, Q>> {
-  api: Client<EIn, EOut, Q>
+  private _client: Client<EIn, EOut, Q>
 
-  constructor(api: Client<EIn, EOut, Q>) {
-    this.api = api
+  constructor(client: Client<EIn, EOut, Q>) {
+    this._client = client
   }
 
-  loadList = q => (state: S, actions: this) => [
-    state,
-    Cmd.ofPromise(
-      this.api.fetchList,
-      q,
-      actions.updateLocalList,
-    )
-  ] as [S, CmdType<this>]
+  loadList = (paging?: Paging<EOut, Q>) => (state: S, actions: this) => {
+    state = setIn(state, _ => _.paging.isLoading, true)
+    state = paging && Array.isArray(paging.list)
+      ? setIn(state, _ => _.paging, paging)
+      : state
+    return [
+      state,
+      Cmd.ofPromise(
+        this._client.fetchList,
+        paging || state.paging,
+        actions.updateLocalList,
+      )
+    ] as [S, CmdType<this>]
+  }
 
-  loadOne = id => (state: S, actions: this) => [
-    state,
+  loadOne = (id: Id) => (state: S, actions: this) => [
+    setIn(state, _ => _.isLoadingEntity, true),
     Cmd.ofPromise(
-      this.api.fetchOne,
+      this._client.fetchOne,
       id,
-      actions.updateLocalOne,
+      actions.updateEntityByOut,
     )
-  ] as [S, CmdType<this>]
+  ]
 
-  updateOne = e => (state: S, actions: this) => [
-    state,
-    Cmd.ofPromise(
-      this.api.updateOne,
-      e,
-      actions.updateLocalOne,
-    )
-  ] as [S, CmdType<this>]
+  updateOne = () => (state: S, actions: this) => {
+    if (Object.keys(state.entityErrors).length) {
+      return
+    }
+    return [
+      state,
+      Cmd.ofPromise(
+        this._client.updateOne,
+        state.entity,
+        actions.editSuccess,
+      )
+    ] as [S, CmdType<this>]
+  }
 
-  createOne = e => (state: S) => (actions: this) => [
-    state,
-    Cmd.ofPromise(
-      this.api.createOne,
-      e,
-      actions.updateLocalOne,
-    )
-  ] as [S, CmdType<this>]
+  createOne = () => (state: S) => (actions: this) => {
+    if (Object.keys(state.entityErrors).length) {
+      return
+    }
+    return [
+      state,
+      Cmd.ofPromise(
+        this._client.createOne,
+        state.entity,
+        actions.editSuccess,
+      )
+    ] as [S, CmdType<this>]
+  }
 
-  saveOne = e => (state: S) => [
-    state,
-    Cmd.ofSub<this>(actions => (e as any).id
-      ? actions.updateOne(e)
-      : actions.createOne(e)
-    )
-  ] as [S, CmdType<this>]
+  saveOne = () => (state: S) => {
+    if (Object.keys(state.entityErrors).length) {
+      return
+    }
+    return [
+      state,
+      Cmd.ofSub<this>(actions => (state.entity as any).id
+        ? actions.updateOne()
+        : actions.createOne()
+      )
+    ] as [S, CmdType<this>]
+  }
 
-  removeOne = (id: Id) => (state: S) => (actions: this) => [
+  removeOne = (id: Id) => (state: S, actions: this) => [
     state,
-    Cmd.ofPromise(
-      this.api.removeOne,
+    Cmd.ofPromise<Id, EOut, S, this>(
+      this._client.removeOne,
       id,
-      actions.updateLocalOne,
+      (_) => actions.loadList(),
     )
-  ] as [S, CmdType<this>]
+  ]
 
-  updateQuery = (q: Q) => (state: S) => ({
-    ...(state as object),
-    query: q,
-  })
+  updateQuery = (q: Q) => (state: S) =>
+    setIn(state, _ => _.paging.query, q)
 
-  toggleEditDialog = ([show, id]: [boolean, Id]) => (state: S) => [
-    { ...(state as object),
-      showEditDialog: show },
-    Cmd.ofSub<this>(actions => show && actions.loadOne(id)),
-  ] as [S, CmdType<this>]
+  toggleEditDialog = ([show, id]: [boolean, Id | void]) => (state: S) => {
+    let cmd = Cmd.none
+    state = setIn(state, _ => _.showEditDialog, show)
+    state = setIn(state, _ => _.entityErrors, {})
+    if (id && show) {
+      cmd = Cmd.ofSub<this>(actions => show && actions.loadOne(id))
+    } else {
+      state = setIn(state, _ => _.entity, this._client.emptyIn())
+    }
+    return [
+      state,
+      cmd
+    ] as [S, CmdType<this>]
+  }
 
   updateLocalList = (paging: Paging<EOut, Q>) => (state: S) => (
-    { ...(state as object), paging }
+    state = setIn(state, _ => _.paging, paging),
+    setIn(state, _ => _.paging.isLoading, false)
   )
 
-  updateLocalOne = e => (state: S) => [
-    { ...(state as object), entity: this.api.outToIn(e) },
-    Cmd.ofSub<this>(
-      actions => actions.loadList(state.paging.query))
+  editSuccess = (e: EOut) => (state: S) => [
+    state,
+    Cmd.ofSub<this>(actions => {
+      actions.updateEntityByOut(e)
+      actions.toggleEditDialog([false, void 0])
+      actions.loadList()
+    })
   ] as [S, CmdType<this>]
+
+  updateEntityByOut = (e: EOut) => (state: S) => (
+    state = setIn(state, _ => _.entity, this._client.outToIn(e)),
+    setIn(state, _ => _.isLoadingEntity, false)
+  )
+
+  updateEntity = (e: EIn) => (state: S) => {
+    let nextState = setIn(state, _ => _.entity, e)
+    const errors = this._client.validate(e)
+    return setIn(nextState, _ => _.entityErrors, errors)
+  }
 }

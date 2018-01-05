@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@types/axios-mock-adapter@^1.9.0":
+  version "1.9.0"
+  resolved "http://registry.npm.taobao.org/@types/axios-mock-adapter/download/@types/axios-mock-adapter-1.9.0.tgz#d44c413f63a718e7398cc57f41f6eaf8f2530b08"
+  dependencies:
+    axios "^0.16.2"
+
+"@types/axios@^0.14.0":
+  version "0.14.0"
+  resolved "http://registry.npm.taobao.org/@types/axios/download/@types/axios-0.14.0.tgz#ec2300fbe7d7dddd7eb9d3abf87999964cafce46"
+  dependencies:
+    axios "*"
+
 "@types/history@*", "@types/history@^4.6.2":
   version "4.6.2"
   resolved "http://registry.npm.taobao.org/@types/history/download/@types/history-4.6.2.tgz#12cfaba693ba20f114ed5765467ff25fdf67ddb0"
@@ -429,11 +441,24 @@ aws4@^1.2.1, aws4@^1.6.0:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/aws4/download/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
-axios@^0.17.1:
+axios-mock-adapter@^1.10.0:
+  version "1.10.0"
+  resolved "http://registry.npm.taobao.org/axios-mock-adapter/download/axios-mock-adapter-1.10.0.tgz#3ccee65466439a2c7567e932798fc0377d39209d"
+  dependencies:
+    deep-equal "^1.0.1"
+
+axios@*, axios@^0.17.1:
   version "0.17.1"
   resolved "http://registry.npm.taobao.org/axios/download/axios-0.17.1.tgz#2d8e3e5d0bdbd7327f91bc814f5c57660f81824d"
   dependencies:
     follow-redirects "^1.2.5"
+    is-buffer "^1.1.5"
+
+axios@^0.16.2:
+  version "0.16.2"
+  resolved "http://registry.npm.taobao.org/axios/download/axios-0.16.2.tgz#ba4f92f17167dfbab40983785454b9ac149c3c6d"
+  dependencies:
+    follow-redirects "^1.2.3"
     is-buffer "^1.1.5"
 
 babel-code-frame@^6.11.0, babel-code-frame@^6.22.0:
@@ -1901,7 +1926,7 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.1"
     readable-stream "^2.0.4"
 
-follow-redirects@^1.2.5:
+follow-redirects@^1.2.3, follow-redirects@^1.2.5:
   version "1.2.6"
   resolved "http://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.2.6.tgz#4dcdc7e4ab3dd6765a97ff89c3b4c258117c79bf"
   dependencies:
@@ -2360,6 +2385,13 @@ https-browserify@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/https-browserify/download/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
 
+hydux-mutator@^0.1.7:
+  version "0.1.7"
+  resolved "http://registry.npm.taobao.org/hydux-mutator/download/hydux-mutator-0.1.7.tgz#aa39f9425dadc20fc9fb307fb4c4afe12e49ebe1"
+  dependencies:
+    quick-lru "^1.1.0"
+    tslib "^1.8.1"
+
 hydux-react@^0.2.1:
   version "0.2.1"
   resolved "http://registry.npm.taobao.org/hydux-react/download/hydux-react-0.2.1.tgz#68348e9a0e45675a69c1ebfc3b2bcf831d02e142"
@@ -2368,9 +2400,18 @@ hydux-react@^0.2.1:
     react "^16.2.0"
     react-dom "^16.2.0"
 
-hydux@^0.2.0, hydux@^0.2.2:
+hydux@^0.2.0:
   version "0.2.2"
   resolved "http://registry.npm.taobao.org/hydux/download/hydux-0.2.2.tgz#9f88d8ea67928402022b459e0c4349000340f16b"
+  dependencies:
+    picodom "^1.0.2"
+    tslib "^1.8.1"
+  optionalDependencies:
+    remotedev "^0.2.7"
+
+hydux@^0.2.4:
+  version "0.2.4"
+  resolved "http://registry.npm.taobao.org/hydux/download/hydux-0.2.4.tgz#c0f8619eab27b35db80b59ec175773db74ef68e3"
   dependencies:
     picodom "^1.0.2"
     tslib "^1.8.1"
@@ -2752,6 +2793,10 @@ isstream@~0.1.2:
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.4.0"
   resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.4.0.tgz#9e566fee624751a1d720c966cd6226d29d4025aa"
+
+js-cookies@^1.0.4:
+  version "1.0.4"
+  resolved "http://registry.npm.taobao.org/js-cookies/download/js-cookies-1.0.4.tgz#d46e576c420ff6d5542c0f52b6d4ef7d637e754e"
 
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
@@ -4141,6 +4186,10 @@ querystringify@0.0.x:
 querystringify@~1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/querystringify/download/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
+
+quick-lru@^1.1.0:
+  version "1.1.0"
+  resolved "http://registry.npm.taobao.org/quick-lru/download/quick-lru-1.1.0.tgz#4360b17c61136ad38078397ff11416e186dcfbb8"
 
 randomatic@^1.1.3:
   version "1.1.7"
