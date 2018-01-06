@@ -172,7 +172,7 @@ export function FormModal({
   )
 }
 
-export function updateField<T, V>(crudState: T, update: (t: T) => void) {
-  return (accessor: (e: T) => V) => e =>
-    update(setIn(crudState, accessor, e.target ? e.target.value : e))
+export function updateField<T, V>(curdState: T, update: (t: T) => void) {
+  return (accessor: ((e: T) => V) | string[]) => e =>
+    update(setIn(curdState, accessor, e.target ? e.target.value : e))
 }

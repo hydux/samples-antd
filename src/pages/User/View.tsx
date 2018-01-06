@@ -1,32 +1,32 @@
 import * as State from './State'
 import * as React from 'react'
-import { View as CrudView } from '../Crud'
+import { View as CurdView } from '../Curd'
 import { Input, Popconfirm, Button } from 'antd'
 import { setIn, updateIn } from 'hydux-mutator'
 
 export const Root = ({ state, actions }: { state: State.State, actions: State.Actions }) => {
-  const { query } = state.crud
-  const changeSearch = CrudView.updateField(query, actions.crud.updateQuery)
+  const { query } = state.curd
+  const changeSearch = CurdView.updateField(query, actions.curd.updateQuery)
 
   const searchInputs: [string, JSX.Element][] = [
     ['ID', <Input key={1} type="text" value={query.id} onChange={changeSearch(_ => _.id)} />],
     ['名字', <Input key={1} type="text" value={query.name} onChange={changeSearch(_ => _.name)} />],
   ]
 
-  const changeForm = CrudView.updateField(state.crud.entity, actions.crud.updateEntity)
+  const changeForm = CurdView.updateField(state.curd.entity, actions.curd.updateEntity)
   return (
     <div>
-      <CrudView.SearchForm
+      <CurdView.SearchForm
         inputs={searchInputs}
-        onSearch={_ => actions.crud.loadList()}
-        isLoading={state.crud.isLoadingEntity}
-        onCreate={_ => actions.crud.toggleEditDialog([true, ''])}
+        onSearch={_ => actions.curd.loadList()}
+        isLoading={state.curd.isLoadingEntity}
+        onCreate={_ => actions.curd.toggleEditDialog([true, ''])}
         onReset={_ => {
-          actions.crud.updateQuery(State.emptyQuery())
-          actions.crud.loadList()
+          actions.curd.updateQuery(State.emptyQuery())
+          actions.curd.loadList()
         }}
       />
-      <CrudView.DataTable
+      <CurdView.DataTable
         columns={[{
           title: 'ID',
           dataIndex: 'id',
@@ -37,15 +37,16 @@ export const Root = ({ state, actions }: { state: State.State, actions: State.Ac
           title: '生日',
           dataIndex: 'birthday',
         }, {
-          title: 'operation',
-          dataIndex: 'operation',
+          title: '操作',
+          dataIndex: '___operation',
           render: (text, record) => {
             return (
               <div>
-                  <Button onClick={_ => actions.crud.toggleEditDialog([true, record.id])}>修改</Button>
+                  {/* <Button onClick={_ => actions.curd.toggleShowDialog([true, record.id])}>查看</Button> */}
+                  <Button onClick={_ => actions.curd.toggleEditDialog([true, record.id])}>修改</Button>
                   <Popconfirm
                     title="确定要删除吗?"
-                    onConfirm={() => actions.crud.removeOne(record.id)}
+                    onConfirm={() => actions.curd.removeOne(record.id)}
                   >
                     <Button
                       type="danger"
@@ -58,24 +59,24 @@ export const Root = ({ state, actions }: { state: State.State, actions: State.Ac
             )
           },
         }]}
-        paging={state.crud.paging}
-        isLoading={state.crud.isLoadingList}
-        onChange={actions.crud.loadList}
+        paging={state.curd.paging}
+        isLoading={state.curd.isLoadingList}
+        onChange={actions.curd.loadList}
       />
-      <CrudView.FormModal
-        visible={state.crud.showEditDialog}
+      <CurdView.FormModal
+        visible={state.curd.showEditDialog}
         title={'编辑用户'}
-        isLoading={state.crud.isLoadingEntity}
-        onSubmit={actions.crud.saveOne}
-        onCancel={_ => actions.crud.toggleEditDialog([false, state.crud.entity.id])}
+        isLoading={state.curd.isLoadingEntity}
+        onSubmit={actions.curd.saveOne}
+        onCancel={_ => actions.curd.toggleEditDialog([false, state.curd.entity.id])}
         inputs={[{
           label: '用户名',
-          input: <Input type="text" value={state.crud.entity.name} onChange={changeForm(_ => _.name)} />,
-          help: state.crud.entityErrors.name,
+          input: <Input type="text" value={state.curd.entity.name} onChange={changeForm(_ => _.name)} />,
+          help: state.curd.entityErrors.name,
         }, {
           label: '生日',
-          input: <Input type="text" value={state.crud.entity.birthday} onChange={changeForm(_ => _.birthday)} />,
-          help: state.crud.entityErrors.birthday,
+          input: <Input type="text" value={state.curd.entity.birthday} onChange={changeForm(_ => _.birthday)} />,
+          help: state.curd.entityErrors.birthday,
         }]}
       />
     </div>

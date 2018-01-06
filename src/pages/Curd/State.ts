@@ -96,7 +96,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     Cmd.ofPromise<Id, EOut, S, this>(
       this._client.removeOne,
       id,
-      (_) => actions.loadList(),
+      _ => actions.loadList(),
     )
   ]
 

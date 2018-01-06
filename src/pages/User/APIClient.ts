@@ -1,4 +1,4 @@
-import { CRUDClient, Types } from '../Crud'
+import { CRUDClient, Types } from '../Curd'
 import yup from 'yup'
 export interface UserIn {
   id: string
@@ -31,19 +31,6 @@ export class UserClient extends CRUDClient<UserIn, UserOut, UserQuery> {
 
   outToIn = (e: UserOut): UserIn => {
     return e
-  }
-
-  validate = (e: UserIn) => {
-    let errors: Types.ValidateError<UserIn> = {}
-    try {
-      e = this.schema.validateSync(e, {
-      }) as any
-    } catch (err) {
-      errors[err.path] = err.message
-      console.log('err', err)
-    }
-    console.log('validated', e)
-    return [e, errors] as [UserIn, typeof errors]
   }
 
   emptyIn(): UserIn {

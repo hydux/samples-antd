@@ -1,18 +1,18 @@
-import client, { UserIn, UserOut, UserQuery } from './APIClient'
-import { State } from '../Crud'
+import client from './APIClient'
+import { State } from '../Curd'
 
 export const emptyIn = client.emptyIn
 export const emptyOut = client.emptyOut
 export const emptyQuery = client.emptyQuery
 
 const state = {
-  crud: State.init(client.emptyIn(), client.emptyOut(), client.emptyQuery()),
+  curd: State.init(client.emptyIn(), client.emptyOut(), client.emptyQuery()),
 }
 
 export const init = () => state
 
 export const actions = {
-  crud: new State.Actions(client)
+  curd: new State.Actions(client)
 }
 
 export type State = typeof state

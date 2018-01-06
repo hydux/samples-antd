@@ -1,6 +1,6 @@
 import { NestedRoutes, parseNestedRoutes } from 'hydux/lib/enhancers/router'
 import * as State from '../main/state'
-import * as CurdPage from 'pages/Crud'
+import * as CurdPage from 'pages/Curd'
 import { noop, Cmd } from 'hydux'
 
 export type Page =
@@ -30,7 +30,7 @@ export const rawRoutes: MyNestedRoutes<State.State, State.Actions> = {
       path: '/users',
       label: 'Users',
       action: loc => state => [({ ...state, page: 'users' }), Cmd.ofSub<State.Actions>(actions => {
-        actions.user.crud.loadList()
+        actions.user.curd.loadList()
       })],
       children: [],
     }],

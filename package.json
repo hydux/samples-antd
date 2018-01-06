@@ -20,6 +20,7 @@
     "@types/node": "^8.0.55",
     "@types/react": "^16.0.31",
     "@types/react-router": "^4.0.19",
+    "@types/swagger-parser": "^4.0.2",
     "@types/yup": "^0.23.0",
     "clean-webpack-plugin": "^0.1.17",
     "cross-env": "^5.1.1",
@@ -40,8 +41,10 @@
     "hydux": "^0.2.4",
     "hydux-mutator": "^0.1.7",
     "hydux-react": "^0.2.1",
+    "io-ts": "^0.9.4",
     "js-cookies": "^1.0.4",
     "react-router-dom": "^4.2.2",
+    "swagger-parser": "^4.0.1",
     "typestyle": "^1.5.1",
     "yup": "^0.23.0"
   }
