@@ -72,11 +72,11 @@ export const Root = ({ state, actions }: { state: State.State, actions: State.Ac
         inputs={[{
           label: '用户名',
           input: <Input type="text" value={state.curd.entity.name} onChange={changeForm(_ => _.name)} />,
-          help: state.curd.entityErrors.name,
+          error: state.curd.entityErrors.name,
         }, {
           label: '生日',
           input: <Input type="text" value={state.curd.entity.birthday} onChange={changeForm(_ => _.birthday)} />,
-          help: state.curd.entityErrors.birthday,
+          error: state.curd.entityErrors.birthday,
         }]}
       />
     </div>

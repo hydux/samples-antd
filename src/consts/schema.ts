@@ -37,7 +37,7 @@ export interface SelectField {
   props?: object
 }
 
-export interface FormFields<T> {
+export interface FormField<T> {
   dataIndex: keyof T
   label: string
   type?: InputField | SelectField
@@ -45,7 +45,7 @@ export interface FormFields<T> {
 }
 
 export interface Form<T> {
-  fields: FormFields<T>
+  fields: FormField<T>[]
 }
 
 export interface Table<DOut> {

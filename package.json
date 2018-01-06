@@ -37,6 +37,7 @@
     "antd": "^3.0.2",
     "axios": "^0.17.1",
     "axios-mock-adapter": "^1.10.0",
+    "classnames": "^2.2.5",
     "debug": "^3.1.0",
     "hydux": "^0.2.4",
     "hydux-mutator": "^0.1.7",

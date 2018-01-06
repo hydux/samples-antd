@@ -5,6 +5,8 @@ const FormItem = Form.Item
 import * as State from './State'
 import { Paging } from './Types'
 import { setIn, updateIn } from 'hydux-mutator'
+import cnx from 'classnames'
+import './style.scss'
 
 export function SearchForm({
   isLoading = false,
@@ -21,6 +23,7 @@ export function SearchForm({
   onCreate?: (e: React.MouseEvent<any>) => void,
   colCount?: number,
 }) {
+  const rowGutter = 24
   return (
     <Form
       className="ant-advanced-search-form"
@@ -31,16 +34,16 @@ export function SearchForm({
       }}
       style={{ marginBottom: 10 }}
     >
-      <Row gutter={24}>{
+      <Row gutter={rowGutter}>{
           inputs.map(([label, element], i) => (
-            <Col span={24 / colCount} key={i}>
-              <FormItem label={label}>
+            <Col span={rowGutter / colCount} key={i}>
+              <FormItem label={label} style={{ display: 'flex' }}>
                 {element}
               </FormItem>
             </Col>
           ))
         }
-        <Col span={24 / colCount} style={{ textAlign: 'right', paddingTop: 40 }}>
+        <Col span={rowGutter / colCount} style={{ textAlign: 'right', }}>
           <Button type="primary" htmlType="submit" loading={isLoading}> 搜索</Button>
           <Button style={{ marginLeft: 8 }} onClick={onReset} loading={isLoading}>
             清空
@@ -102,6 +105,7 @@ export function FormModal({
     input: JSX.Element,
     status?: 'success' | 'warning' | 'error' | 'validating',
     help?: string,
+    error?: string,
     hasFeedback?: boolean,
     required?: boolean,
     className?: string,
@@ -141,12 +145,14 @@ export function FormModal({
               e.preventDefault()
               onSubmit(e)
             }}
+            className={'entity-form'}
           >
             {inputs && inputs.map(({
               label,
               input,
               help,
-              status = help ? 'error' : void 0,
+              error,
+              status = error ? 'error' : void 0,
               hasFeedback = true,
               required,
               className,
@@ -156,7 +162,7 @@ export function FormModal({
                 key={i}
                 label={label}
                 validateStatus={status}
-                help={help}
+                help={error || help}
                 required={required}
                 hasFeedback={hasFeedback}
                 className={className}
