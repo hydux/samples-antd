@@ -24,23 +24,13 @@ const userSchema = {
     'time': {
       'description': '',
       'example': '2018-01-06 10:59:20',
-      'type': 'date'
+      'type': 'string',
+      'format': '',
     }
   },
   'required': [
-    'liked',
-    'likers_count',
-    'abstract',
-    'comment_count',
-    'can_access',
-    'price',
-    'photos',
-    'length',
-    'html',
-    'onlook_count',
-    'time',
-    'is_onlooked',
-    'rec_count'
+    'name',
+    'time'
   ],
   'type': 'object'
 }

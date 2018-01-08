@@ -26,7 +26,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     this._client = client
   }
 
-  loadList = (paging?: Paging<EOut>) => (state: S, actions: this) => {
+  loadList = (paging?: Paging<EOut>) => (state: S, actions: this): [S, CmdType<this>] => {
     state = setIn(state, _ => _.isLoadingList, true)
     state = paging && Array.isArray(paging.list)
       ? setIn(state, _ => _.paging, paging)
@@ -38,7 +38,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
         [paging || state.paging, state.query],
         actions.updateLocalList,
       )
-    ] as [S, CmdType<this>]
+    ]
   }
 
   loadOne = (id: Id) => (state: S, actions: this) => [
@@ -50,7 +50,7 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     )
   ]
 
-  updateOne = () => (state: S, actions: this) => {
+  updateOne = () => (state: S, actions: this): ActionResult<S, this> => {
     if (Object.keys(state.entityErrors).length) {
       return
     }
@@ -61,10 +61,10 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
         state.entity,
         actions.editSuccess,
       )
-    ] as [S, CmdType<this>]
+    ]
   }
 
-  createOne = () => (state: S) => (actions: this) => {
+  createOne = () => (state: S) => (actions: this): ActionResult<S, this> => {
     if (Object.keys(state.entityErrors).length) {
       return
     }
@@ -75,10 +75,10 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
         state.entity,
         actions.editSuccess,
       )
-    ] as [S, CmdType<this>]
+    ]
   }
 
-  saveOne = () => (state: S) => {
+  saveOne = () => (state: S): ActionResult<S, this> => {
     if (Object.keys(state.entityErrors).length) {
       return
     }
@@ -88,10 +88,10 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
         ? actions.updateOne()
         : actions.createOne()
       )
-    ] as [S, CmdType<this>]
+    ]
   }
 
-  removeOne = (id: Id) => (state: S, actions: this) => [
+  removeOne = (id: Id) => (state: S, actions: this): ActionResult<S, this> => [
     state,
     Cmd.ofPromise<Id, EOut, S, this>(
       this._client.removeOne,
@@ -100,10 +100,10 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     )
   ]
 
-  updateQuery = (q: Q) => (state: S) =>
+  updateQuery = (q: Q) => (state: S): ActionResult<S, this> =>
     setIn(state, _ => _.query, q)
   // actions should be binded
-  toggleEditDialog = ([show, id]: [boolean, Id | void]) => (state: S) => {
+  toggleEditDialog = ([show, id]: [boolean, Id | void]) => (state: S): ActionResult<S, this> => {
     let cmd = Cmd.none
     state = setIn(state, _ => _.showEditDialog, show)
     state = setIn(state, _ => _.entityErrors, {})
@@ -112,32 +112,29 @@ export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EO
     } else {
       state = setIn(state, _ => _.entity, this._client.emptyIn())
     }
-    return [
-      state,
-      cmd
-    ] as [S, CmdType<this>]
+    return [state, cmd]
   }
 
-  updateLocalList = (paging: Paging<EOut>) => (state: S) => (
+  updateLocalList = (paging: Paging<EOut>) => (state: S): ActionResult<S, this> => (
     state = setIn(state, _ => _.paging, paging),
     setIn(state, _ => _.isLoadingList, false)
   )
 
-  editSuccess = (e: EOut) => (state: S) => [
+  editSuccess = (e: EOut) => (state: S): ActionResult<S, this> => [
     state,
     Cmd.ofSub<this>(actions => {
       actions.updateEntityByOut(e)
       actions.toggleEditDialog([false, void 0])
       actions.loadList()
     })
-  ] as [S, CmdType<this>]
+  ]
 
-  updateEntityByOut = (e: EOut) => (state: S) => (
+  updateEntityByOut = (e: EOut) => (state: S): ActionResult<S, this> => (
     state = setIn(state, _ => _.entity, this._client.outToIn(e)),
     setIn(state, _ => _.isLoadingEntity, false)
   )
 
-  updateEntity = (e: EIn) => (state: S) => {
+  updateEntity = (e: EIn) => (state: S): ActionResult<S, this> => {
     const errors = this._client.validate(e)
     let nextState = setIn(state, _ => _.entity, errors[0])
     return setIn(nextState, _ => _.entityErrors, errors[1])

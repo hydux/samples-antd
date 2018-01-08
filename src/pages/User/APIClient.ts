@@ -1,4 +1,4 @@
-import { CRUDClient, Types } from '../Curd'
+import { CURDClient, Types } from '../Curd'
 import yup from 'yup'
 export interface UserIn {
   id: string
@@ -17,7 +17,7 @@ export interface UserQuery {
   name: string
 }
 
-export class UserClient extends CRUDClient<UserIn, UserOut, UserQuery> {
+export class UserClient extends CURDClient<UserIn, UserOut, UserQuery> {
 
   schema = yup.object({
     id: yup.string().matches(/^\d*$/),

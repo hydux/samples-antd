@@ -1,6 +1,10 @@
 import { ColumnProps } from 'antd/lib/table/interface'
 import t from 'io-ts'
 
+export interface Schema {
+  routes: Routes
+}
+
 export interface Routes {
   path: string
   label?: string

@@ -2,7 +2,7 @@ import { Paging, Client, Id, State, ValidateError } from './Types'
 import axios from 'utils/axios'
 import yup from 'yup'
 
-export default abstract class CRUDClient<EIn extends { id: Id }, EOut, Q> implements Client<EIn, EOut, Q> {
+export default abstract class CURDClient<EIn extends { id: Id }, EOut, Q> implements Client<EIn, EOut, Q> {
   name: string
   schema: yup.ObjectSchema
   constructor(name) {
