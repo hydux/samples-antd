@@ -19,7 +19,11 @@ export function init<EIn, EOut, Q>(eIn: EIn, eOut: EOut, q: Q): State<EIn, EOut,
   }
 }
 
-export class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EOut, Q>> {
+export function initActions<EIn, EOut, Q>(client: Client<EIn, EOut, Q>) {
+  return { ...new Actions(client) }
+}
+
+class Actions<EIn, EOut, Q, S extends State<EIn, EOut, Q> = State<EIn, EOut, Q>> {
   private _client: Client<EIn, EOut, Q>
 
   constructor(client: Client<EIn, EOut, Q>) {

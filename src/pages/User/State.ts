@@ -12,8 +12,10 @@ const state = {
 export const init = () => state
 
 export const actions = {
-  curd: new State.Actions(client)
+  curd: State.initActions(client)
 }
 
-export type State = typeof state
-export type Actions = typeof actions
+let s: ReadonlySet<string> = new Set()
+
+export type State = Readonly<typeof state>
+export type Actions = Readonly<typeof actions>

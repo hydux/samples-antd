@@ -7,15 +7,17 @@ export interface Paging<EOut> {
   total: number,
 }
 
-export interface State<EIn, EOut, Q> extends Object {
-  readonly paging: Paging<EOut>,
-  readonly isLoadingEntity: boolean,
-  readonly entity: Readonly<EIn>,
-  readonly showEditDialog: boolean,
-  readonly entityErrors: ValidateError<EIn>
-  readonly query: Q,
-  readonly isLoadingList: boolean,
+export type RawState<EIn, EOut, Q> = {
+  paging: Paging<EOut>,
+  isLoadingEntity: boolean,
+  entity: Readonly<EIn>,
+  showEditDialog: boolean,
+  entityErrors: ValidateError<EIn>
+  query: Q,
+  isLoadingList: boolean,
 }
+
+export type State<EIn, EOut, Q> = Readonly<RawState<EIn, EOut, Q>>
 
 export interface Client<EIn, EOut, Q> {
   fetchList(arg: [Paging<EOut>, Q]): Promise<Paging<EOut>>

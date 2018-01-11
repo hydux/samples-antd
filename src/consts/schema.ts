@@ -14,8 +14,8 @@ export interface Routes {
 
 export interface Domain<T> {
   schema: object
-  schemaType: 'json-schema' // | 'yup'
-  empty?: T
+  schemaType: 'json-schema' | 'yup' | 'none'
+  empty: T
   key?: string // 'id'
 }
 
@@ -33,7 +33,7 @@ export type InputField = {
 
 export interface SelectField {
   type: 'select'
-  multiple?: boolean
+  multiple: boolean
   options: {
     label: string
     value: string
@@ -42,10 +42,10 @@ export interface SelectField {
 }
 
 export interface FormField<T> {
-  dataIndex: keyof T
+  name: keyof T
   label: string
-  type?: InputField | SelectField
-  required?: boolean
+  input: InputField | SelectField
+  required: boolean
 }
 
 export interface Form<T> {
@@ -57,7 +57,7 @@ export interface Table<DOut> {
 }
 
 export interface PageUI<DIn, DOut, Q> {
-  columns: Table<DOut>
+  table: Table<DOut>
   form?: Form<DIn>
   searchForm?: Form<Q>
 }
@@ -67,14 +67,16 @@ export interface API {
   url: string
 }
 
+export interface APIs {
+  createOne: API
+  updateOne: API
+  removeOne: API
+  queryOne: API
+  queryList: API
+}
+
 export interface Page<DIn, DOut, Q> {
   domains: PageDomains<DIn, DOut, Q>
-  apis: {
-    createOne: API
-    updateOne: API
-    removeOne: API
-    queryOne: API
-    queryList: API
-  }
+  apis: APIs
   ui: PageUI<DIn, DOut, Q>
 }

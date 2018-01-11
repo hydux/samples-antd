@@ -22,7 +22,7 @@ export class UserClient extends CURDClient<UserIn, UserOut, UserQuery> {
   schema = yup.object({
     id: yup.string().matches(/^\d*$/),
     name: yup.string().max(10, '最长10个字符').min(4, '最小4个字符'),
-    birthday: yup.string().matches(/\d{4}-[01][0-9]-[0-3][0-9]/, '非法生日格式'),
+    birthday: yup.string().matches(/^\d{4}-[01][0-9]-[0-3][0-9]$/, '非法生日格式'),
   })
 
   constructor() {
