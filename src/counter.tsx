@@ -18,7 +18,7 @@ const counter = {
           10,
           actions.upN) ]
   },
-  view: (state: State) => (actions: Actions) => (
+  view: (state: State, actions: Actions) => (
     <div>
       <h1>{state.count}</h1>
       <button onClick={actions.down}>–</button>
